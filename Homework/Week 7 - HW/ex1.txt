@@ -1,0 +1,4 @@
+1. preg_match() may be faster than ereg(), according to the PHP Manual.
+2. The PCRE functions are binary safe, but the ereg functions are not.
+3. ereg regexes do not use delimiters (the starting and ending slashes in this case), which includes another difference: there are a number of modifiers which can be applied to preg expressions following the closing delimiter.
+
