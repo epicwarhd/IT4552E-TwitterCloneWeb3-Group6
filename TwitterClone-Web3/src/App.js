@@ -8,7 +8,6 @@ import Rightbar from "./components/Rightbar";
 import "./App.css";
 import { useMoralis } from "react-moralis";
 import { ConnectButton, Icon } from "web3uikit";
-import PopupComment from "./components/PopupComment";
 
 const App = () => {
   const { isAuthenticated, Moralis } = useMoralis();
@@ -39,9 +38,6 @@ const App = () => {
         </div>
         <div className="rightBar">
           <Rightbar />
-        </div>
-        <div className="modal">
-          <PopupComment />
         </div>
       </div>
       ) : (

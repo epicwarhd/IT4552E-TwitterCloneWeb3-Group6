@@ -74,7 +74,13 @@ function CommentComponent() {
                   }}>
                     <Icon fill="#3f3f3f" size={20} svg="messageCircle" />
                   </div>
-                  <div className="interactionNums">
+                  <div className="interactionNums" onClick={(e) => {
+                    console.log(e.target)
+                    if (e.target.firstChild.firstChild.childNodes[1].attributes[1].value == "#3f3f3f")
+                      e.target.firstChild.firstChild.childNodes[1].attributes[1].value = "#ff1493"
+                    else 
+                      e.target.firstChild.firstChild.childNodes[1].attributes[1].value = "#3f3f3f"
+                  }}>
                     <Icon fill="#3f3f3f" size={20} svg="star" />
                     12
                   </div>

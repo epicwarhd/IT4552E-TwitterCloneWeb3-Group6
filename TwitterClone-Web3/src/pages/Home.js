@@ -5,7 +5,6 @@ import { TextArea, Icon, Modal, Typography, Input } from "web3uikit";
 import { useState, useRef } from "react";
 import TweetInFeed from "../components/TweetInFeed";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
-import PopupComment from "../components/PopupComment";
 import DefaultComponent from "../components/CommentComponent";
 
 const Home = () => {

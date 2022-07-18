@@ -6,7 +6,6 @@ import { defaultImgs } from "../defaultimgs";
 import { Icon, Modal, Typography, Input } from "web3uikit";
 import { useMoralis } from "react-moralis";
 import { useEffect, useState } from "react";
-import PopupComment from "./PopupComment";
 import DefaultComponent from "./CommentComponent";
 
 const TweetInFeed = ({ profile }) => {
@@ -41,7 +40,7 @@ const TweetInFeed = ({ profile }) => {
               <img src={e.attributes.tweeterPfp ? e.attributes.tweeterPfp : defaultImgs[0]} className="profilePic"></img>
               <div className="completeTweet">
                 <div className="who">
-                {e.attributes.tweeterUserName.slice(0, 6)}
+                {e.attributes.tweeterUserName.slice(0, 6)}  
                 {console.log(e.attributes.createdAt)}
                 {console.log(e.attributes)}
                   <div className="accWhen">{
@@ -62,8 +61,11 @@ const TweetInFeed = ({ profile }) => {
                       )}
                 </div>
                 <div className="interactions">
-                  <div className="interactionNums" onClick={() => {
-                      document.querySelector(".modal").style.display = "flex"
+                  <div className="interactionNums" onClick={(e) => {
+                      if (e.target.parentElement.parentElement.childNodes[3].style.display == 'block')
+                        e.target.parentElement.parentElement.childNodes[3].style.display = 'none'
+                      else 
+                        e.target.parentElement.parentElement.childNodes[3].style.display = 'block'
                   }}>
                     <Icon id={"comment"+key} fill="#3f3f3f" size={20} svg="messageCircle" />
                   </div>
