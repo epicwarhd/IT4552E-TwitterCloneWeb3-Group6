@@ -6,6 +6,7 @@ import { useState, useRef } from "react";
 import TweetInFeed from "../components/TweetInFeed";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import DefaultComponent from "../components/CommentComponent";
+import SearchBar from "../components/SearchBar";
 
 const Home = () => {
 
@@ -111,6 +112,9 @@ const Home = () => {
   return (
     <>
     <div className="pageIdentify">Home</div>
+      <div className="searchbar-container">
+        <SearchBar></SearchBar>
+      </div>
       <div className="mainContent">
         <div className="profileTweet">
           <img src={user.attributes.pfp ? user.attributes.pfp : defaultImgs[0]} className="profilePic"></img>
