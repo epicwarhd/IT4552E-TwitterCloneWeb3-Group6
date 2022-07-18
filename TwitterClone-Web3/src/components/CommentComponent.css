@@ -1,0 +1,26 @@
+/* $dark-grey: #404040;
+$nc-blue: #00BDFC;
+$nc-bl-dark: #0093C4;
+$red: #FC3F00; */
+.comment-section {
+
+}
+
+.post-comment {
+    max-width: 100%;
+    border-bottom: 1px solid rgb(63, 63, 63);
+    padding-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.comment-container {  
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tweetImg {
+  width: 98%;
+  border-radius: 10px;
+}

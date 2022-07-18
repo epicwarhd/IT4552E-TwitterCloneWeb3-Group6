@@ -1,10 +1,12 @@
 import React from "react";
 import "./Home.css";
 import { defaultImgs } from "../defaultimgs";
-import { TextArea, Icon } from "web3uikit";
+import { TextArea, Icon, Modal, Typography, Input } from "web3uikit";
 import { useState, useRef } from "react";
 import TweetInFeed from "../components/TweetInFeed";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
+import PopupComment from "../components/PopupComment";
+import DefaultComponent from "../components/CommentComponent";
 
 const Home = () => {
 
@@ -104,7 +106,7 @@ const Home = () => {
   const changeHandler = (event) => {
     const img = event.target.files[0];
     setTheFile(img);
-    setSelectedFile(URL.createObjectURL(img));
+      (URL.createObjectURL(img));
   };
 
   return (

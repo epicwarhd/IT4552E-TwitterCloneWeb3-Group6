@@ -1,6 +1,7 @@
 .page {
   display: flex;
   justify-content: space-between;
+  z-index: 0;
 }
 
 .sideBar {
@@ -10,6 +11,19 @@
   border-right: 1px solid rgb(63, 63, 63);
   color: white;
   height: 100vh;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
 }
 
 .rightBar {

@@ -7,11 +7,15 @@
     color: white;
     font-weight: bold;
     font-size: 20px;
-    z-index: 999;
+    z-index: 1;
 }
 
 .mainContent {
     
+}
+
+.popup {
+   z-index: 2;
 }
 
 .profileTweet {
