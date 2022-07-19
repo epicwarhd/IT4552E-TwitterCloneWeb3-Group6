@@ -1,1 +1,0 @@
-If we use GET instead of POST, the information we input will show in the url => Lack of security
