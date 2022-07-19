@@ -4,11 +4,31 @@ import { Icon } from "web3uikit";
 import { Link } from "react-router-dom";
 import { useMoralis } from "react-moralis";
 import { defaultImgs } from "../defaultimgs";
+import Web3 from 'web3';
+import { useEffect, useState } from "react";
+import { CONTRACT_ABI, CONTRACT_ADDRESS } from '../config';
 
 const Sidebar = () => {
 
   const { Moralis} = useMoralis();
   const user = Moralis.User.current();
+  const [account, setAccount] = useState();
+  const [info, setInfo] = useState()
+  const web3 = new Web3(Web3.givenProvider || 'http://localhost:3000');
+  const contractList = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+
+  useEffect(() => {
+    async function loadAccount() {
+      var accounts = await web3.eth.requestAccounts();
+      setAccount(accounts[0])
+
+      const info = await contractList.methods.getProfile(accounts[0]).call()
+      setInfo(info)
+    }
+
+    loadAccount();
+  }, [])
+  
 
   return (
     <>
@@ -25,7 +45,7 @@ const Sidebar = () => {
             </div>
           </Link>
 
-          <Link to="/profile" className="link">
+          <Link to={`/profile/${account}`} className="link">
             <div className="menuItems">
               <Icon fill="#ffffff" size={33} svg="user" />
               Profile
@@ -41,13 +61,13 @@ const Sidebar = () => {
         </div>
 
         <div className="details">
-          <img src={user.attributes.pfp ? user.attributes.pfp : defaultImgs[0]} className="profilePic"></img>
+          <img src={info?.[2] !== "" ? info?.[2] : defaultImgs[0]} className="profilePic" alt="Avatar"></img>
           <div className="profile">
             <div className="who">
-              {user.attributes.username.slice(0, 6)}
+              {info?.[0] !== "" ? info?.[0] : <div>No name</div>} 
             </div>
             <div className="accWhen">
-              {`${user.attributes.ethAddress.slice(0, 4)}...${user.attributes.ethAddress.slice(38)}`}
+              {account?.slice(0, 4)}...{account?.slice(38)}
             </div>
           </div>
         </div>

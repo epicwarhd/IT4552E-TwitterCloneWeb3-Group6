@@ -5,12 +5,15 @@ import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import Sidebar from "./components/Sidebar";
 import Rightbar from "./components/Rightbar";
+import Comment from "./pages/Comment"
+import Search from "./pages/Search"
 import "./App.css";
 import { useMoralis } from "react-moralis";
 import { ConnectButton, Icon } from "web3uikit";
 
 const App = () => {
-  const { isAuthenticated, Moralis } = useMoralis();
+  const { isAuthenticated, Moralis, isInitialized } = useMoralis();
+  // const user = Moralis.User.current();
 
   return (
     <>
@@ -32,8 +35,10 @@ const App = () => {
         <div className="mainWindow">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/:address" element={<Profile />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/search/:searchNow" element={<Search />} />
+            <Route path="/comment/:id" element={<Comment />} />
           </Routes>
         </div>
         <div className="rightBar">

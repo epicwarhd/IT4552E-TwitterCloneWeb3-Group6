@@ -3,88 +3,113 @@ import { Link } from "react-router-dom";
 import "./Settings.css";
 import { useState, useRef, useEffect } from "react";
 import { Input } from "web3uikit";
-import pfp1 from "../images/pfp1.png";
-import pfp2 from "../images/pfp2.png";
-import pfp3 from "../images/pfp3.png";
-import pfp4 from "../images/pfp4.png";
-import pfp5 from "../images/pfp5.png";
+import Web3 from "web3"
 import { defaultImgs } from "../defaultimgs";
-import { useMoralis, useMoralisWeb3Api } from "react-moralis";
+import { useMoralis } from "react-moralis";
+import { CONTRACT_ABI, CONTRACT_ADDRESS } from '../config';
 
 const Settings = () => {
 
   const [pfps, setPfps] = useState([]);
   const [selectedPFP, setSelectedPFP] = useState();
-  const inputFile = useRef(null);
-  const [selectedFile, setSelectedFile] = useState(defaultImgs[1]);
-  const [theFile, setTheFile] = useState();
+  const inputBanner = useRef(null);
+  const inputAvatar = useRef(null);
+  const [selectedBanner, setSelectedBanner] = useState(defaultImgs[1]);
+  const [selectedAvatar, setSelectedAvatar] = useState(defaultImgs[1]);
+  const [theBanner, setTheBanner] = useState();
+  const [theAvatar, setTheAvatar] = useState();
   const [username, setUsername] = useState();
   const [bio, setBio] = useState();
-  const { Moralis, isAuthenticated, account } = useMoralis();
-  const Web3Api = useMoralisWeb3Api();
-
-
-  const resolveLink = (url) => {
-    if (!url || !url.includes("ipfs://")) return url;
-    return url.replace("ipfs://", "https://gateway.ipfs.io/ipfs/");
-  };
+  const { Moralis, isAuthenticated } = useMoralis();
+  // const Web3Api = useMoralisWeb3Api();
+  const web3 = new Web3(Web3.givenProvider || 'http://localhost:3000');
+  const contractList = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+  const [account, setAccount] = useState()
 
   useEffect(() => {
+    async function loadAccount() {
+      const accounts = await web3.eth.requestAccounts();
+      setAccount(accounts[0])
 
-    const fetchNFTs = async () => {
-      const options = {
-        chain: "mumbai",
-        address: account
-      }
+      const oldInfo = await contractList.methods.getProfile(accounts[0]).call()
 
-      const mumbaiNFTs = await Web3Api.account.getNFTs(options);
-      const images = mumbaiNFTs.result.map(
-        (e) => resolveLink(JSON.parse(e.metadata)?.image)
-      );
-      setPfps(images);
     }
+    loadAccount()
+    
+  },[])
 
-    fetchNFTs();
+  // const resolveLink = (url) => {
+  //   if (!url || !url.includes("ipfs://")) return url;
+  //   return url.replace("ipfs://", "https://gateway.ipfs.io/ipfs/");
+  // };
 
-  },[isAuthenticated, account])
+  // useEffect(() => {
+
+  //   const fetchNFTs = async () => {
+  //     const options = {
+  //       chain: "mumbai",
+  //       address: account
+  //     }
+
+  //     const mumbaiNFTs = await Web3Api.account.getNFTs(options);
+  //     const images = mumbaiNFTs.result.map(
+  //       (e) => resolveLink(JSON.parse(e.metadata)?.image)
+  //     );
+  //     setPfps(images);
+  //   }
+
+  //   fetchNFTs();
+
+  // },[isAuthenticated, account])
 
   const onBannerClick = () => {
-    inputFile.current.click();
+    inputBanner.current.click();
   };
 
-  const changeHandler = (event) => {
+  const onAvatarClick = () => {
+    inputAvatar.current.click()
+  }
+
+  const changeBanner = (event) => {
     
     const img = event.target.files[0];
-    setTheFile(img);
-    setSelectedFile(URL.createObjectURL(img));
+    setTheBanner(img);
+    setSelectedBanner(URL.createObjectURL(img));
   };
 
-  const saveEdits = async () => {
-    const User = Moralis.Object.extend("_User");
-    const query = new Moralis.Query(User);
-    const myDetails = await query.first();
+  const changeAvatar = (event) => {
+    const img = event.target.files[0];
+    setTheAvatar(img);
+    setSelectedAvatar(URL.createObjectURL(img));
+  }
 
-    if (bio){
-      myDetails.set("bio", bio);
+  const saveAvatar = async () => {
+    if (theAvatar) {
+      var avatar = theAvatar;
+      var fileAvatar = new Moralis.File(avatar.name, avatar);
+      await fileAvatar.saveIPFS();
+
+      await contractList.methods.changeAvatar(fileAvatar.ipfs()).send({from: account})
+      window.location.reload();
     }
+  }
 
-    if (selectedPFP){
-      myDetails.set("pfp", selectedPFP);
+  const saveBanner = async () => {
+    if (theBanner) {
+      var banner = theBanner;
+      var fileBanner = new Moralis.File(banner.name, banner);
+      await fileBanner.saveIPFS();
+
+      await contractList.methods.changeBanner(fileBanner.ipfs()).send({from: account})
+      window.location.reload();
     }
+  }
 
-    if (username){
-      myDetails.set("username", username);
-    }
+  const saveProfile = async () => {
 
-    if (theFile) {
-      const data = theFile;
-      const file = new Moralis.File(data.name, data);
-      await file.saveIPFS();
-      myDetails.set("banner", file.ipfs());
-    }
-
-    await myDetails.save();
+    await contractList.methods.changeProfile(username, bio).send({from: account})
     window.location.reload();
+
   }
 
   return (
@@ -106,46 +131,51 @@ const Settings = () => {
           labelBgColor="#141d26"
           onChange={(e)=> setBio(e.target.value)}
         />
+        <div className="save" onClick={() => saveProfile()}>
+          Save
+        </div>
 
         <div className="pfp">
-          Profile Image (Your NFTs)
+          Profile Image 
 
           <div className="pfpOptions">
-            {pfps.map((e,i) => {
-
-              return(
-                <>
-                <img
-                src={e}
-                className={
-                  selectedPFP === e ? "pfpOptionSelected" : "pfpOption"
-                }
-                onClick={() => {setSelectedPFP(pfps[i]);}}
-                ></img>
-                </>
-              )
-            })}
+          <img
+              src={selectedAvatar}
+              onClick={onAvatarClick}
+              className="banner"
+            ></img>
+            <input
+              type="file"
+              name="file"
+              ref={inputAvatar}
+              onChange={changeAvatar}
+              style={{ display: "none" }}
+            />
           </div>
+        </div>
+
+        <div className="save" onClick={() => saveAvatar()}>
+          Save
         </div>
 
         <div className="pfp">
           Profile Banner
           <div className="pfpOptions">
             <img
-              src={selectedFile}
+              src={selectedBanner}
               onClick={onBannerClick}
               className="banner"
             ></img>
             <input
               type="file"
               name="file"
-              ref={inputFile}
-              onChange={changeHandler}
+              ref={inputBanner}
+              onChange={changeBanner}
               style={{ display: "none" }}
             />
           </div>
         </div>
-        <div className="save" onClick={() => saveEdits()}>
+        <div className="save" onClick={() => saveBanner()}>
           Save
         </div>
       </div>

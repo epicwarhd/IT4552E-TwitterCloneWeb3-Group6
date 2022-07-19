@@ -15,9 +15,9 @@
     display: flex;
     justify-content: start;
     flex-direction: column;
-    gap:10px;
-    width:89%;
-    gap:10px;
+    gap: 10px;
+    width: 89%;
+    gap: 10px;
 }
 
 .interactions {
@@ -28,7 +28,7 @@
 }
 
 .interactionNums {
-    color:#3f3f3f;
+    color: #3f3f3f;
     display: flex;
     justify-content: start;
     gap: 10px;
@@ -37,7 +37,7 @@
 }
 
 .interactionNums:hover {
-    cursor:pointer;
+    cursor: pointer;
     background-color: #1da0f20b;
 }
 
@@ -54,14 +54,18 @@
     color: gray;
 }
 
-.tweetContent{
+.tweetContent {
     display: flex;
     justify-content: start;
     flex-direction: column;
-    gap:10px;
+    gap: 10px;
 }
 
 .tweetImg {
     width: 98%;
     border-radius: 10px;
+}
+
+.modal {
+    background-color: #1c2834;
 }
